@@ -30,13 +30,14 @@ jobs:
             echo "$file was changed"
           done
 
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
         with:
-          ssh-private-key: ${{ vars.SSH_PRIVATE_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
 
       - name: Copy Docker Compose File via SSH
-        run: scp -o StrictHostKeyChecking=no ${{ steps.changed-files.outputs.all_changed_files }} ${{ vars.OCI_USER }}@${{ vars.OCI_SERVER}}:~/
+        run: scp ${{ steps.changed-files.outputs.all_changed_files }} ${{ vars.OCI_USER }}@${{ vars.OCI_SERVER}}:~/
 
       - name: Deploy with Docker Compose
         run: |
