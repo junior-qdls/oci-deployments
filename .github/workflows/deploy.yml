@@ -2,8 +2,10 @@ name: Deploy in OCI
 
 on:
   push:
-    paths:
-      - "docker-compose/*.yml"
+    branches:
+      - main
+    #paths:
+    #  - "docker-compose/*.yml"
 
 jobs:
   detect_changes:
@@ -17,7 +19,7 @@ jobs:
       - name: Get changed files
         id: filter
         run: |
-          echo "::set-output name=changed_files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'docker-compose/*.yml' | jq -Rsc 'split("\n") | map(select(length > 0)) | map(.))"
+          echo 'docker-compose/*.yml' | jq -Rsc 'split("\n") | map(select(length > 0)) | map(.)'
   deploy:
     runs-on: ubuntu-latest
     strategy:
