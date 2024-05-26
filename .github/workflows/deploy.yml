@@ -35,13 +35,16 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
+      - name: Print output
+        run: |
+          echo "output is is ${{ needs.detect_changes.outputs.all_changed_files }}"
 
       - name: Copy Docker Compose File via SSH
-        run: scp ${{ needs.detect_changes.outputs.all_changed_files }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_SERVER}}:~/
+        run: scp ${{ needs.detect_changes.outputs.all_changed_files }} ${{ vars.OCI_USER }}@${{ vars.OCI_SERVER}}:~/
 
       - name: Deploy with Docker Compose
         run: |
-          ssh ${{ secrets.OCI_USER }}@${{ secrets.OCI_SERVER }} "
+          ssh ${{ vars.OCI_USER }}@${{ vars.OCI_SERVER }} "
             docker-compose -f ${{ matrix.compose_file }} down &&
             docker-compose -f ${{ matrix.compose_file }} up -d
           "
