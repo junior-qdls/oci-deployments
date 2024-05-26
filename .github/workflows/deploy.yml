@@ -34,6 +34,7 @@ jobs:
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ vars.SSH_PRIVATE_KEY }}
+          known_hosts: ${{ vars.KNOWN_HOSTS }}
 
       - name: Copy Docker Compose File via SSH
         run: scp ${{ steps.changed-files.outputs.all_changed_files }} ${{ vars.OCI_USER }}@${{ vars.OCI_SERVER}}:~/
