@@ -36,11 +36,11 @@ jobs:
           ssh-private-key: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
 
       - name: Copy Docker Compose File via SSH
-        run: scp ${{ matrix.compose_file }} ${{ variables.OCI_USER }}@${{ variables.OCI_SERVER}}:~/${{ matrix.compose_file }}
+        run: scp ${{ matrix.compose_file }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_SERVER}}:~/${{ matrix.compose_file }}
 
       - name: Deploy with Docker Compose
         run: |
-          ssh ${{ variables.OCI_USER }}@${{ variables.OCI_SERVER }} "
+          ssh ${{ secrets.OCI_USER }}@${{ secrets.OCI_SERVER }} "
             docker-compose -f ${{ matrix.compose_file }} down &&
             docker-compose -f ${{ matrix.compose_file }} up -d
           "
