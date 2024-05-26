@@ -18,13 +18,12 @@ jobs:
 
       - name: Get changed files
         id: filter
-        run: |
-          echo 'docker-compose/*.yml' | jq -Rsc 'split("\n") | map(select(length > 0)) | map(.)'
+        uses: tj-actions/changed-files@v35
+        with:
+          files: docker-compose/*.yml
+
   deploy:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        compose_file: ${{ fromJson(needs.detect_changes.outputs.changed_files) }}
 
     needs: detect_changes
 
@@ -38,7 +37,7 @@ jobs:
           ssh-private-key: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
 
       - name: Copy Docker Compose File via SSH
-        run: scp ${{ matrix.compose_file }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_SERVER}}:~/${{ matrix.compose_file }}
+        run: scp ${{ needs.detect_changes.outputs.all_changed_files }} ${{ secrets.OCI_USER }}@${{ secrets.OCI_SERVER}}:~/
 
       - name: Deploy with Docker Compose
         run: |
