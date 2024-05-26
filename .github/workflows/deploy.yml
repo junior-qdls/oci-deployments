@@ -36,7 +36,7 @@ jobs:
           ssh-private-key: ${{ vars.SSH_PRIVATE_KEY }}
 
       - name: Copy Docker Compose File via SSH
-        run: scp ${{ steps.changed-files.outputs.all_changed_files }} ${{ vars.OCI_USER }}@${{ vars.OCI_SERVER}}:~/
+        run: scp -o StrictHostKeyChecking=no ${{ steps.changed-files.outputs.all_changed_files }} ${{ vars.OCI_USER }}@${{ vars.OCI_SERVER}}:~/
 
       - name: Deploy with Docker Compose
         run: |
