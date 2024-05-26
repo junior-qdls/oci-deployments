@@ -1,0 +1,46 @@
+name: Deploy with Docker Compose
+
+on:
+  push:
+    paths:
+      - "docker-compose/*.yml"
+
+jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_files: ${{ steps.filter.outputs.changed_files }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get changed files
+        id: filter
+        run: |
+          echo "::set-output name=changed_files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} -- 'docker-compose/*.yml' | jq -Rsc 'split("\n") | map(select(length > 0)) | map(.))"
+  deploy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compose_file: ${{ fromJson(needs.detect_changes.outputs.changed_files) }}
+
+    needs: detect_changes
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
+
+      - name: Copy Docker Compose File via SSH
+        run: scp ${{ matrix.compose_file }} ${{ variables.OCI_USER }}@${{ variables.OCI_SERVER}}:~/${{ matrix.compose_file }}
+
+      - name: Deploy with Docker Compose
+        run: |
+          ssh ${{ variables.OCI_USER }}@${{ variables.OCI_SERVER }} "
+            docker-compose -f ${{ matrix.compose_file }} down &&
+            docker-compose -f ${{ matrix.compose_file }} up -d
+          "
