@@ -1,0 +1,15 @@
+{
+  "name": "oci-deployments",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "convert-compose-to-yacht.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  }
+}

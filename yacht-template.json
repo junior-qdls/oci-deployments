@@ -1,0 +1,50 @@
+{
+  "version": "1.0",
+  "templates": [
+    {
+      "type": 1,
+      "title": "web",
+      "name": "web",
+      "description": "Web server",
+      "logo": "",
+      "categories": [],
+      "platform": "",
+      "image": "nginx",
+      "restart_policy": "unless-stopped",
+      "ports": ["8080:80/tcp"],
+      "volumes": [
+        {
+          "container": "/usr/share/nginx/html",
+          "bind": "./html"
+        }
+      ],
+      "env": [
+        {
+          "name": "NGINX_HOST",
+          "label": "NGINX_HOST",
+          "default": "foobar.com"
+        },
+        {
+          "name": "NGINX_PORT",
+          "label": "NGINX_PORT",
+          "default": "80"
+        }
+      ]
+    },
+    {
+      "type": 1,
+      "title": "redis",
+      "name": "redis",
+      "description": "Redis cache",
+      "logo": "",
+      "categories": [],
+      "platform": "",
+      "image": "redis",
+      "restart_policy": "unless-stopped",
+      "ports": [],
+      "volumes": [],
+      "env": []
+    }
+  ]
+}
+
