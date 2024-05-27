@@ -34,7 +34,7 @@
     "title": "redis",
     "name": "redis",
     "description": "Redis cache",
-    "logo": "",
+    "logo": "https://redis.io/wp-content/uploads/2024/04/Logotype.svg?auto=webp&quality=85,75",
     "categories": [],
     "platform": "",
     "image": "redis",
